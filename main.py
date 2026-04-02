@@ -30,12 +30,12 @@ def webhook():
 
     return "ok"
 
-# 🔥 webhook set manually (no before_first_request)
 @app.route("/setwebhook")
 def set_webhook():
     url = "https://tradingsunil-bot.onrender.com/webhook"
-    r = requests.get(f"https://api.telegram.org/bot{TOKEN}/setWebhook?url={url}")
-    return r.text
+    return requests.get(
+        f"https://api.telegram.org/bot{TOKEN}/setWebhook?url={url}"
+    ).text
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
