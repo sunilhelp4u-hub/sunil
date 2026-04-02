@@ -1,5 +1,4 @@
 flask
-pandas
 requests
-python-telegram-bot
-TOKEN = "8331918470:AAEpnz6rgY-AC3P6NuKyyeGiV06q0282YbQ"
+pandas
+python-telegram-bot==20.7
