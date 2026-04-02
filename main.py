@@ -1,9 +1,9 @@
 from flask import Flask, request
-from telegram import Bot, Update
+import requests
 import os
 
-TOKEN = "8331918470:AAEpnz6rgY-AC3P6NuKyyeGiV06q0282YbQ"
-bot = Bot(token=TOKEN)
+TOKEN = os.getenv("8331918470:AAEpnz6rgY-AC3P6NuKyyeGiV06q0282YbQ")
+URL = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
 
 app = Flask(__name__)
 
@@ -13,23 +13,28 @@ def home():
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    update = Update.de_json(request.get_json(force=True), bot)
-    
-    if update.message:
-        text = update.message.text
-        chat_id = update.message.chat_id
-        
+    data = request.get_json()
+
+    if "message" in data:
+        chat_id = data["message"]["chat"]["id"]
+        text = data["message"].get("text", "")
+
         if text == "/start":
-            bot.send_message(chat_id=chat_id, text="🚀 Bot Working!")
+            msg = "🚀 Bot Working!"
         else:
-            bot.send_message(chat_id=chat_id, text="Message received ✅")
+            msg = "Message received ✅"
+
+        requests.post(URL, json={
+            "chat_id": chat_id,
+            "text": msg
+        })
 
     return "ok"
 
-# set webhook automatically
 @app.before_first_request
 def set_webhook():
-    bot.set_webhook(url="https://tradingsunil-bot.onrender.com/webhook")
+    webhook_url = "https://tradingsunil-bot.onrender.com/webhook"
+    requests.get(f"https://api.telegram.org/bot{TOKEN}/setWebhook?url={webhook_url}")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
