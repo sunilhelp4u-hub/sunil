@@ -1,35 +1,37 @@
-from telegram import Update
-from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes, CommandHandler
 from flask import Flask
 import threading
 import os
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 TOKEN = "8331918470:AAEpnz6rgY-AC3P6NuKyyeGiV06q0282YbQ"
 
 # ===== TELEGRAM =====
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("🚀 Trading Bot Active!")
+def start(update, context):
+    update.message.reply_text("🚀 Bot Working!")
 
-async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Message received ✅")
+def reply(update, context):
+    update.message.reply_text("Message received ✅")
+
+def run_bot():
+    updater = Updater(TOKEN, use_context=True)
+    dp = updater.dispatcher
+
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(MessageHandler(Filters.text, reply))
+
+    updater.start_polling()
+    updater.idle()
 
 # ===== FLASK =====
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "Bot is Running 🚀"
+    return "Bot Running 🚀"
 
 def run_web():
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
-# ===== BOT =====
-def run_bot():
-    app_bot = ApplicationBuilder().token(TOKEN).build()
-    app_bot.add_handler(CommandHandler("start", start))
-    app_bot.add_handler(MessageHandler(filters.TEXT, reply))
-    app_bot.run_polling()
 
 # ===== RUN BOTH =====
 threading.Thread(target=run_web).start()
