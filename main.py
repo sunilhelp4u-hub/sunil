@@ -1,18 +1,14 @@
-import time
-import pandas as pd
-from strategy import strategy
-from telegram_bot import send
-from config import *
+from flask import Flask
+import threading
 
-while True:
-    if not BOT_RUNNING:
-        time.sleep(5)
-        continue
+app = Flask(__name__)
 
-    df = pd.DataFrame({"close": [100,101,102,103,104,105,106]})
-    signal = strategy(df)
+@app.route("/")
+def home():
+    return "🚀 Trading Bot is Running!"
 
-    if signal != "HOLD":
-        send(f"Signal: {signal}")
+def run_web():
+    app.run(host="0.0.0.0", port=10000)
 
-    time.sleep(60)
+# start web server in thread
+threading.Thread(target=run_web).start()
