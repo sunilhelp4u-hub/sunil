@@ -2,7 +2,7 @@ from flask import Flask, request
 import requests
 import os
 
-TOKEN = os.getenv("8331918470:AAEpnz6rgY-AC3P6NuKyyeGiV06q0282YbQ")
+TOKEN = "8331918470:AAEpnz6rgY-AC3P6NuKyyeGiV06q0282YbQ"
 
 app = Flask(__name__)
 
@@ -13,6 +13,9 @@ def home():
 @app.route("/webhook", methods=["POST"])
 def webhook():
     data = request.get_json()
+
+    if not data:
+        return "no data"
 
     if "message" in data:
         chat_id = data["message"]["chat"]["id"]
