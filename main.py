@@ -3,7 +3,7 @@ from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTyp
 from flask import Flask
 import threading
 
-TOKEN = "8331918470:AAEpnz6rgY-AC3P6NuKyyeGiV06q0282YbQ"
+TOKEN = 8331918470:AAEpnz6rgY-AC3P6NuKyyeGiV06q0282YbQ
 
 # ===== TELEGRAM FUNCTIONS =====
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
